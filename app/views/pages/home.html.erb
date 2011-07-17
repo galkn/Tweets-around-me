@@ -1,0 +1,18 @@
+
+<div id="content_c" class="vertical_outer">
+	<div class="vertical_middle">
+		<div id="form_c" class="vertical_inner">
+		<% form_tag display_tweets_path do %>
+			<a id="close" href="#" title="Close"><img src="/images/close.png" alt="Close" /></a>
+			<h1>Find people who are talking about:</h1>
+
+			<div id="term_c">
+				<%= text_field_tag "term", "", :class => "field" %>
+				<%= submit_tag 'Find', :class => "button" %>
+			</div>
+		<% end %>
+		</div>
+	</div>
+</div>
+
+<div id="map_canvas"></div>
