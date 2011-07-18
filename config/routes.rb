@@ -1,9 +1,6 @@
 TweetsAroundMe::Application.routes.draw do
-  get "twitter/get_tweets"
 
   get "pages/home"
-
-  get "pages/display_tweets", :as => :display_tweets
   
   root :to => "pages#home"
 
