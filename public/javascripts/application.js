@@ -1,4 +1,8 @@
 var tweet_coordinates = [];
+var map;
+var infoWindow = new google.maps.InfoWindow({
+	maxWidth: 350
+});
 
 function initialize() {
 	var myOptions = {
@@ -15,49 +19,48 @@ function initialize() {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
-			map.setCenter(initialLocation);
-	/*		
-			var populationOptions = {
-			      strokeColor: "#FF0000",
-			      strokeOpacity: 0.8,
-			      strokeWeight: 2,
-			      fillColor: "#FF0000",
-			      fillOpacity: 0.35,
-			      map: map,
-			      center: initialLocation,
-			      radius: 1000 * 5
-			    };
-			    cityCircle = new google.maps.Circle(populationOptions);
-			*/
+			map.setCenter(initialLocation);			
 		});
 	}
 	
 	google.maps.event.addListener(map, 'dragend', function() {
-		center = map.getCenter();
-		addMarkersAround(center.lat(), center.lng(), map);
+		load_tweets();
 	});
 }
 
-function coordinates_are_in_array(latitude, longitude, array) {
+function load_tweets() {
+	center = map.getCenter();
+	add_marker_on(center.lat(), center.lng());
+}
+
+function load_info_windows() {
+	for(i in tweet_coordinates) {
+		marker_info_window(tweet_coordinates[i]['marker'], tweet_coordinates[i]['tweets']);
+	}
+}
+
+function index_of_coordinates_in_array(latitude, longitude, array) {
 	for(i in array) {
 		var coordinates = array[i];
 		if((coordinates['latitude'] == latitude) && (coordinates['longitude'] == longitude)) {
-			return true;
+			return i;
 		}
 	}
-	return false;
+	return -1;
 }
 
-function addMarkersAround(latitude, longitude, map) {
+function add_marker_on(latitude, longitude) {
 	$.getJSON("http://search.twitter.com/search.json?callback=?",{
 		q: $("#saved_term").text(),
-		geocode: latitude +","+ longitude +","+ 20 +"km",
+		geocode: latitude +","+ longitude +","+ 40 +"km",
 		result_type: "recent",
 		page: 1,
 		rpp: 100
 	}, function(data) {
 		$(data["results"]).each(function() {		
 			var geocoder = new google.maps.Geocoder();
+			
+			var tweet = $(this)[0];
 
 			geocoder.geocode({
 				address: $(this)[0]["location"]
@@ -66,11 +69,12 @@ function addMarkersAround(latitude, longitude, map) {
 	            	var lat = result[0].geometry.location.lat();
 		            var lng = result[0].geometry.location.lng();
 				
-					if(!coordinates_are_in_array(lat, lng, tweet_coordinates)) {
+					var index_in_array = index_of_coordinates_in_array(lat, lng, tweet_coordinates);
+					if(index_in_array == -1) {
 						var new_coordinates = new Array();
 						new_coordinates['latitude'] = lat;
 						new_coordinates['longitude'] = lng;
-						tweet_coordinates.push(new_coordinates);
+						new_coordinates['tweets'] = [tweet];
 						
 						var image = '/images/marker_blue.png';
 						var shadow = '/images/marker_shadow.png';
@@ -80,10 +84,41 @@ function addMarkersAround(latitude, longitude, map) {
 							icon: image,
 							shadow: shadow
 						});
+						new_coordinates['marker'] = marker;
+						
+						tweet_coordinates.push(new_coordinates);
+					} else {
+						// Coordinates already exist in the array,
+						// Push tweet into it only if the tweet doens't already exist
+						push_tweet_in(index_in_array, tweet);
 					}
 				}
+				
+				load_info_windows();
 	        });
 		});
+	});
+}
+
+function push_tweet_in(index_in_array, tweet) {
+	// Push tweet only if the tweet doens't already exist
+	for(i in tweet_coordinates[index_in_array]['tweets']) {
+		if(tweet_coordinates[index_in_array]['tweets'][i]["id"] == tweet["id"]) {
+			return false;
+		}
+	}
+	tweet_coordinates[index_in_array]['tweets'].push(tweet);
+	return true;
+}
+
+function marker_info_window(marker, tweets) {
+	google.maps.event.addListener(marker, 'click', function() {
+		var infoWindowContent = '';
+		for(i in tweets) {
+			infoWindowContent += "<div style='margin-bottom: 15px;'>" + tweets[i]["text"] + "</div>";
+		}
+		infoWindow.setContent(infoWindowContent);
+		infoWindow.open(map, marker);
 	});
 }
 
@@ -101,6 +136,16 @@ $(function() {
 	$("#find_button").click(function() {
 		$("#saved_term").html($("#term_field").val());
 		fade_out_content();
+		load_tweets();
+		
+		var interval_id;
+		$(window).focus(function() {
+		    //interval_id = setInterval(load_tweets, 5000);
+		});
+		$(window).blur(function() {
+		    clearInterval(interval_id);
+		});
+		
 		return false;
 	});
 });
