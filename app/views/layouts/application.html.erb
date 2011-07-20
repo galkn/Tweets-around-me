@@ -10,10 +10,11 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tag %>
 </head>
-<body onload="initialize()">
-<div style="display: none;" id="saved_term"></div>
-<div id="bg"><div id="bg_inner"></div></div> 
-<%= yield %>
+<body>
+	<div id="saved_term"></div>
+	<div id="bg"><div id="bg_inner"></div></div> 
+
+	<%= yield %>
 
 </body>
 </html>

@@ -4,6 +4,10 @@ html, body {
   padding: 0;
 }
 
+* {
+	font-family: "myriad pro", helvetica, arial, sans-serif;
+}
+
 a img, a {
 	border: none;
 	text-decoration: none;
@@ -31,9 +35,7 @@ a img, a {
 	background-image: -webkit-radial-gradient(rgba(71,108,186,.5), rgba(0,0,0,.8));
 }
 
-#content_c {
-	font-family: "myriad pro", helvetica, arial, sans-serif;
-	font-weight: 100;
+#content_c, h1 {
 	line-height: 1;
 	color: #fff;
 	text-shadow: 1px 1px 1px rgba(0,0,0,.5);
@@ -56,12 +58,26 @@ a img, a {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	background: rgba(38,61,111,.8);
 	border: 0px solid rgba(255,255,255,.1);
 	-webkit-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0 1px 0px #42609f;
 	-moz-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0 1px 0px #42609f;
 	box-shadow: 0 1px 8px rgba(0,0,0,.9), 0px 0px 200px rgba(255,255,255,.8);
 	border: 1px solid rgba(0,0,0,.4);
+	
+	background: rgba(38,61,111,.8);
+	background: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0, rgba(29,48,88,.8)),
+	    color-stop(1, rgba(38,61,111,.7))
+	);
+	background: -moz-linear-gradient(
+	    center bottom,
+	    rgba(29,48,88,.8) 0%,
+	    rgba(38,61,111,.7) 100%
+	);
+	background: -o-linear-gradient(rgba(38,61,111,.7), rgba(29,48,88,.8));
 }
 
 form {
@@ -164,4 +180,87 @@ h1 {
 	top: -20px;
 	left: -20px;
 	opacity: .8;
+}
+
+#saved_term {
+	display: none;
+}
+
+#top_term_info_c {
+	display: none;
+	z-index: 4000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+						color-stop(.25, rgba(255, 255, 255, .07)), color-stop(.25, transparent),
+						color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .07)),
+						color-stop(.75, rgba(255, 255, 255, .07)), color-stop(.75, transparent), to(transparent));
+	background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, .07) 25%, transparent 25%,
+						transparent 50%, rgba(255, 255, 255, .07) 50%, rgba(255, 255, 255, .07) 75%, transparent 75%, transparent);
+	background-size: 50px 50px;
+	-moz-background-size: 50px 50px;
+	-webkit-background-size: 50px 50px;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+	color: #FFF;
+	cursor: pointer;
+	text-shadow: 0 1px 0 rgba(0,0,0,.5);
+	-webkit-animation: animate-stripes 1s linear infinite;
+	background-color: rgba(18,53,124,.8); 
+	border-bottom: 1px solid #112a5b;
+	
+	-webkit-box-shadow: inset 0px 25px 0px rgba(255,255,255,.1), 0 3px 0px rgba(0,0,0,.3);
+	-moz-box-shadow: inset 0px 25px 0px rgba(255,255,255,.1), 0 3px 0px rgba(0,0,0,.3);
+	box-shadow: inset 0px 25px 0px rgba(255,255,255,.1), 0 3px 0px rgba(0,0,0,.3);
+}
+
+#top_term_info_c h1 {
+	padding: 12px 0px;
+	margin: 0px auto;
+	font-size: 20pt;
+}
+
+@-webkit-keyframes animate-stripes {
+    from {
+        background-position: 0 0;
+    }
+    to {
+       background-position: -50px 0;
+    }
+}
+
+.tweet {
+	word-wrap: break-word;
+	margin: 10px 0px;
+	padding: 5px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	border: 1px solid #9BD7EF;
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0, rgb(190,231,249)),
+	    color-stop(0.54, rgb(218,238,245))
+	);
+	background-image: -moz-linear-gradient(
+	    center bottom,
+	    rgb(190,231,249) 0%,
+	    rgb(218,238,245) 54%
+	);
+	color: #8399A0;
+	margin-right: 10px;
+	overflow: auto;
+}
+
+.thumbnail {
+	float: left;
+	margin-right: 5px;
+}
+
+.twitter_username {
+	font-weight: 700;
+	color: #25A9D1;
 }

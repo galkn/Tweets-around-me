@@ -6,7 +6,7 @@ var infoWindow = new google.maps.InfoWindow({
 
 function initialize() {
 	var myOptions = {
-		zoom: 10,
+		zoom: 11,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		panControl: false,
 		mapTypeControl: false,
@@ -18,7 +18,8 @@ function initialize() {
 	if(navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+			// NYC:
+			// initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 			map.setCenter(initialLocation);			
 		});
 	}
@@ -77,7 +78,7 @@ function add_marker_on(latitude, longitude) {
 						new_coordinates['tweets'] = [tweet];
 						
 						var image = '/images/marker_blue.png';
-						var shadow = '/images/marker_shadow.png';
+						var shadow = '/images/marker_shade.png';
 						var marker = new google.maps.Marker({
 							position: new google.maps.LatLng(lat, lng),
 							map: map, 
@@ -103,7 +104,7 @@ function add_marker_on(latitude, longitude) {
 function push_tweet_in(index_in_array, tweet) {
 	// Push tweet only if the tweet doens't already exist
 	for(i in tweet_coordinates[index_in_array]['tweets']) {
-		if(tweet_coordinates[index_in_array]['tweets'][i]["id"] == tweet["id"]) {
+		if(i<10 && tweet_coordinates[index_in_array]['tweets'][i]["id"] == tweet["id"]) {
 			return false;
 		}
 	}
@@ -115,7 +116,15 @@ function marker_info_window(marker, tweets) {
 	google.maps.event.addListener(marker, 'click', function() {
 		var infoWindowContent = '';
 		for(i in tweets) {
-			infoWindowContent += "<div style='margin-bottom: 15px;'>" + tweets[i]["text"] + "</div>";
+			text = tweets[i]["text"];
+			thumbnail = tweets[i]["profile_image_url"];
+			created_at = tweets[i]["created_at"];
+			username = tweets[i]["from_user"];
+			
+			infoWindowContent += "<div class='tweet'>";
+			infoWindowContent += "<img class='thumbnail' width='35' height='35' src='" + thumbnail + "' alt='' />";
+			infoWindowContent += "<span class='twitter_username'>" + username + ": </span>";
+			infoWindowContent += text + "</div>";
 		}
 		infoWindow.setContent(infoWindowContent);
 		infoWindow.open(map, marker);
@@ -127,6 +136,10 @@ function fade_out_content() {
 	$("#content_c").animate({opacity: "0"}, 500, function() {$("#content_c").remove();});
 }
 
+$("body").ready(function() {
+	initialize();
+});
+
 $(function() {
 	$("#close").click(function() {
 		fade_out_content();
@@ -134,9 +147,14 @@ $(function() {
 	});
 	
 	$("#find_button").click(function() {
-		$("#saved_term").html($("#term_field").val());
+		var search_term = $("#term_field").val();
+		$("#saved_term").html(search_term);
 		fade_out_content();
 		load_tweets();
+		
+		// Reveal top bar
+		$("#top_term_info").html(search_term);
+		setTimeout(function() {$("#top_term_info_c").slideDown();}, 1000);
 		
 		var interval_id;
 		$(window).focus(function() {
