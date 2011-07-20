@@ -1,5 +1,5 @@
 <div id="top_term_info_c">
-	<h1>Displaying tweets about <span id="top_term_info"></span></h1>
+	<h1>Displaying recent tweets about <span id="top_term_info"></span></h1>
 </div>
 
 <div id="content_c" class="vertical_outer">
@@ -7,7 +7,7 @@
 		<div id="form_c" class="vertical_inner">
 		<% form_tag root_path do %>
 			<a id="close" href="#" title="Close"><img src="/images/close.png" alt="Close" /></a>
-			<h1>Find people who are talking about:</h1>
+			<h1>Display recent tweets about:</h1>
 
 			<div id="term_c">
 				<%= text_field_tag "term", "", :class => "field", :id => "term_field" %>

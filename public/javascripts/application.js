@@ -29,6 +29,11 @@ function initialize() {
 	});
 }
 
+function replace_url_with_html_link(text) {
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
+
 function load_tweets() {
 	center = map.getCenter();
 	add_marker_on(center.lat(), center.lng());
@@ -116,14 +121,14 @@ function marker_info_window(marker, tweets) {
 	google.maps.event.addListener(marker, 'click', function() {
 		var infoWindowContent = '';
 		for(i in tweets) {
-			text = tweets[i]["text"];
+			text = replace_url_with_html_link(tweets[i]["text"]);
 			thumbnail = tweets[i]["profile_image_url"];
 			created_at = tweets[i]["created_at"];
 			username = tweets[i]["from_user"];
 			
 			infoWindowContent += "<div class='tweet'>";
 			infoWindowContent += "<img class='thumbnail' width='35' height='35' src='" + thumbnail + "' alt='' />";
-			infoWindowContent += "<span class='twitter_username'>" + username + ": </span>";
+			infoWindowContent += "<a title='" + username + "' href='http://twitter.com/" + username + "' class='twitter_username'>" + username + ": </a>";
 			infoWindowContent += text + "</div>";
 		}
 		infoWindow.setContent(infoWindowContent);
