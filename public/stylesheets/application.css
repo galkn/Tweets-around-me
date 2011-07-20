@@ -59,8 +59,8 @@ a img, a {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 0px solid rgba(255,255,255,.1);
-	-webkit-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0 1px 0px #42609f;
-	-moz-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0 1px 0px #42609f;
+	-webkit-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0px 0px 200px rgba(255,255,255,.8);
+	-moz-box-shadow: inset 0 1px 8px rgba(0,0,0,.5), 0px 0px 200px rgba(255,255,255,.8);
 	box-shadow: 0 1px 8px rgba(0,0,0,.9), 0px 0px 200px rgba(255,255,255,.8);
 	border: 1px solid rgba(0,0,0,.4);
 	
